@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 Cloud Catalog</title>
+    <title>PS4 Homebrew Store</title>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -23,8 +23,6 @@
             margin-bottom: 20px;
             border-bottom: 2px solid #21262d;
             padding-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
         .dashboard-header h1 { 
             margin: 0; 
@@ -33,28 +31,17 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        .ip-config {
-            background: #161b22;
-            border: 1px solid #30363d;
-            padding: 6px 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-        }
-        .ip-config input {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            color: #58a6ff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-align: center;
-            width: 120px;
+        .status-badge {
+            background: #238636;
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
+            box-shadow: 0 0 8px rgba(35, 134, 54, 0.4);
         }
 
-        /* Carrusel horizontal */
+        /* Carrusel Horizontal */
         .horizontal-scroll { 
             display: flex; 
             flex-direction: row;
@@ -63,17 +50,15 @@
             overflow-y: hidden;
             padding: 15px 5px 25px 5px;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
         }
         .horizontal-scroll::-webkit-scrollbar { height: 8px; }
         .horizontal-scroll::-webkit-scrollbar-track { background: #161b22; border-radius: 4px; }
         .horizontal-scroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-        .horizontal-scroll::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
 
-        /* Tarjeta compacta */
+        /* Tarjeta de juego compacta */
         .card { 
-            flex: 0 0 170px; 
-            width: 170px;
+            flex: 0 0 160px; 
+            width: 160px;
             background: #161b22; 
             border: 2px solid #30363d;
             border-radius: 10px; 
@@ -87,14 +72,14 @@
             justify-content: space-between;
         }
         .card:focus-within, .card:hover { 
-            transform: scale(1.05) translateY(-4px); 
+            transform: scale(1.06) translateY(-4px); 
             border-color: #58a6ff; 
             box-shadow: 0 8px 20px rgba(88, 166, 255, 0.35);
             background: #1c2128;
         }
         .card img { 
             width: 100%; 
-            height: 190px; 
+            height: 180px; 
             object-fit: cover; 
             border-radius: 6px; 
             background: #21262d; 
@@ -114,34 +99,19 @@
             font-family: monospace; 
         }
 
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 8px;
-        }
         .btn-main { 
             background: #1f6feb; 
             color: white; 
             border: none; 
-            padding: 6px; 
-            border-radius: 4px; 
+            padding: 7px; 
+            border-radius: 5px; 
             cursor: pointer; 
             width: 100%; 
             font-weight: bold;
             font-size: 11px;
+            margin-bottom: 8px;
         }
         .btn-main:hover { background: #388bfd; }
-        .btn-copy {
-            background: #30363d;
-            color: #c9d1d9;
-            border: none;
-            padding: 4px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 10px;
-        }
-        .btn-copy:hover { background: #484f58; }
 
         .addons-section {
             border-top: 1px solid #30363d;
@@ -171,7 +141,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 85px;
+            max-width: 90px;
         }
         .btn-sub {
             background: #238636;
@@ -194,11 +164,8 @@
 <body>
 
     <div class="dashboard-header">
-        <h1>🎮 PS4 Online Catalog</h1>
-        <div class="ip-config">
-            <label for="ps4-ip">IP PS4:</label>
-            <input type="text" id="ps4-ip" value="192.168.1.50">
-        </div>
+        <h1>🎮 PS4 PKG Store</h1>
+        <div class="status-badge">GoldHEN Online</div>
     </div>
     
     <div class="horizontal-scroll" id="game-list">
@@ -206,9 +173,9 @@
     </div>
 
     <script>
-        fetch('games.json?v=' + new Date().getTime())
+        fetch('games.json')
             .then(res => {
-                if (!res.ok) throw new Error('No se encontró el archivo games.json');
+                if (!res.ok) throw new Error('No se encontró games.json');
                 return res.json();
             })
             .then(games => {
@@ -225,14 +192,66 @@
                         updatesHtml = game.updates.map(up => `
                             <div class="addon-item">
                                 <span title="${up.name}">${up.name}</span>
-                                <div style="display:flex; gap:2px;">
-                                    <button class="btn-sub" onclick="installGame('${up.url}')">Instalar</button>
-                                    <button class="btn-sub" style="background:#30363d;" onclick="copyLink('${up.url}')" title="Copiar enlace">🔗</button>
-                                </div>
+                                <button class="btn-sub" onclick="installGame('${up.url}')">Instalar</button>
                             </div>
                         `).join('');
                     }
 
                     let dlcsHtml = '<div class="empty-addons">Sin DLCs</div>';
-                    if (game
-        
+                    if (game.dlcs && game.dlcs.length > 0) {
+                        dlcsHtml = game.dlcs.map(dlc => `
+                            <div class="addon-item">
+                                <span title="${dlc.name}">${dlc.name}</span>
+                                <button class="btn-sub" onclick="installGame('${dlc.url}')">Instalar</button>
+                            </div>
+                        `).join('');
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.tabIndex = index + 1;
+                    card.innerHTML = `
+                        <div>
+                            <img src="${coverUrl}" alt="${cusa}" onerror="this.src='https://via.placeholder.com/160x180?text=${cusa}'">
+                            <h3>${gameTitle}</h3>
+                            <p>${cusa}</p>
+                            <button class="btn-main" onclick="installGame('${game.url}')">Juego Base</button>
+                        </div>
+                        
+                        <div class="addons-section">
+                            <div class="addons-title">🔄 Updates</div>
+                            ${updatesHtml}
+                            <div class="addons-title" style="margin-top: 6px;">🧩 DLCs</div>
+                            ${dlcsHtml}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('game-list').innerHTML = `<p style="color: red;">Error al cargar catálogo.</p>`;
+            });
+
+        function installGame(pkgUrl) {
+            // Conexión interna directa al servicio de GoldHEN
+            const endpoint = 'http://127.0.0.1:12800/api/install';
+            const data = { type: "direct", packages: [pkgUrl] };
+
+            fetch(endpoint, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                alert('¡Iniciando descarga en segundo plano! Revisa las notificaciones de la consola.');
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error al conectar con GoldHEN.');
+            });
+        }
+    </script>
+</body>
+</html>
