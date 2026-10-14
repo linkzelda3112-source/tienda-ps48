@@ -1,9 +1,9 @@
 [
   {
-    "title": "Ejemplo Homebrew / Juego",
+    "title": "Juego 1",
     "title_id": "CUSA00000",
-    "size": "500 MB",
+    "size": "Reemplazar con el tamaño (Ej: 4.2 GB)",
     "image": "https://i.imgur.com/7b3229U.jpeg",
-    "url": "https://tu-enlace-de-descarga-directa.com/archivo.pkg"
+    "url": "https://drive.google.com/uc?export=download&id=1JrpAlhnDjf6zuB8xM11t9dcqpfXjkEf5"
   }
 ]
