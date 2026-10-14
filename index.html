@@ -107,7 +107,6 @@
         }
         .btn-main:hover { background: #388bfd; }
 
-        /* Sección de Updates & DLCs */
         .addons-section {
             border-top: 1px solid #30363d;
             padding-top: 10px;
@@ -125,22 +124,26 @@
         .addon-item {
             background: #0d1117;
             border: 1px solid #21262d;
-            padding: 6px 10px;
-            border-radius: 4px;
-            margin-bottom: 5px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 11px;
         }
+        .addon-item span {
+            color: #e6edf3;
+            font-weight: 500;
+        }
         .btn-sub {
             background: #238636;
             color: white;
             border: none;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
         }
         .btn-sub:hover { background: #2ea043; }
@@ -163,7 +166,7 @@
     </div>
 
     <script>
-        fetch('games.json')
+        fetch('games.json?v=' + new Date().getTime()) // Evita la caché vieja
             .then(res => {
                 if (!res.ok) throw new Error('No se encontró el archivo games.json');
                 return res.json();
@@ -174,7 +177,9 @@
 
                 games.forEach((game, index) => {
                     const cusa = (game.cusa || "CUSA00000").toUpperCase();
-                    const coverUrl = `https://gs-sec.ww.prod.dl.playstation.net/gs/sec/app/pkg/CH0001-${cusa}_00-0000000000000000/i/icon0.png`;
+                    
+                    // Si pones imagen manual la usa; si no, intenta buscar la de PSN por CUSA
+                    const coverUrl = game.image || `https://gs-sec.ww.prod.dl.playstation.net/gs/sec/app/pkg/CH0001-${cusa}_00-0000000000000000/i/icon0.png`;
                     const gameTitle = game.title || `Juego (${cusa})`;
 
                     // Renderizar actualizaciones
@@ -213,7 +218,7 @@
                         <div class="addons-section">
                             <div class="addons-title">🔄 Actualizaciones</div>
                             ${updatesHtml}
-                            <div class="addons-title" style="margin-top: 8px;">🧩 DLCs / Contenido</div>
+                            <div class="addons-title" style="margin-top: 10px;">🧩 DLCs / Contenido</div>
                             ${dlcsHtml}
                         </div>
                     `;
@@ -236,7 +241,7 @@
                 body: JSON.stringify(data)
             })
             .then(() => {
-                alert('¡Petición enviada a GoldHEN! Revisa tus notificaciones de descarga.');
+                alert('¡Petición enviada a GoldHEN! Revisa tus notificaciones de descarga en la consola.');
             })
             .catch(err => {
                 console.error(err);
