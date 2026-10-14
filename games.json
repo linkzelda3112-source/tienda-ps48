@@ -37,5 +37,12 @@
     "url": "https://archive.org/download/super-psx-dragon.-ball.-fighter-z-cusa-08992-v-1.00-5.05-ps-4/%5BSuperPSX%5D-DRAGON.BALL.FighterZ_CUSA08992_v1.00_%5B5.05%5D-PS4.pkg",
     "updates": [],
     "dlcs": []
+  },
+  {
+    "cusa": "CUSA00000",
+    "title": "Dragon Ball Z: Tenkaichi 4",
+    "url": "https://archive.org/download/tenkaichi-4-ps-4/Tenkaichi%204%20ps4.pkg",
+    "updates": [],
+    "dlcs": []
   }
 ]
