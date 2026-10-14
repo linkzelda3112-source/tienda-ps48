@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 Aurora Dashboard</title>
+    <title>PS4 Horizontal Dashboard</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: #090c10; 
             color: #fff; 
-            padding: 30px; 
+            padding: 20px; 
             margin: 0; 
             overflow-x: hidden;
         }
@@ -18,44 +21,67 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1300px;
-            margin: 0 auto 30px auto;
+            max-width: 100%;
+            margin-bottom: 20px;
             border-bottom: 2px solid #21262d;
-            padding-bottom: 15px;
+            padding-bottom: 12px;
         }
         .dashboard-header h1 { 
             margin: 0; 
             color: #58a6ff; 
-            font-size: 24px;
+            font-size: 20px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
         .status-badge {
             background: #238636;
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
             font-weight: bold;
-            box-shadow: 0 0 10px rgba(35, 134, 54, 0.4);
+            box-shadow: 0 0 8px rgba(35, 134, 54, 0.4);
         }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
-            gap: 25px; 
-            max-width: 1300px; 
-            margin: 0 auto; 
+        /* Contenedor de desplazamiento horizontal */
+        .horizontal-scroll { 
+            display: flex; 
+            flex-direction: row;
+            gap: 15px; 
+            overflow-x: auto; 
+            overflow-y: hidden;
+            padding: 15px 5px 25px 5px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
+        /* Estilo de la barra de desplazamiento */
+        .horizontal-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .horizontal-scroll::-webkit-scrollbar-track {
+            background: #161b22;
+            border-radius: 4px;
+        }
+        .horizontal-scroll::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+        .horizontal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #58a6ff;
+        }
+
+        /* Tarjeta de juego compacta */
         .card { 
+            flex: 0 0 160px; /* Ancho fijo y más pequeño para cada juego */
+            width: 160px;
             background: #161b22; 
             border: 2px solid #30363d;
-            border-radius: 12px; 
+            border-radius: 10px; 
             overflow: hidden; 
-            padding: 15px; 
+            padding: 10px; 
             text-align: center; 
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             outline: none;
             display: flex;
             flex-direction: column;
@@ -63,23 +89,23 @@
         }
 
         .card:focus-within, .card:hover { 
-            transform: scale(1.03); 
+            transform: scale(1.06) translateY(-4px); 
             border-color: #58a6ff; 
-            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(88, 166, 255, 0.35);
             background: #1c2128;
         }
 
         .card img { 
             width: 100%; 
-            height: 280px; 
+            height: 180px; /* Carátula más chica */
             object-fit: cover; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             background: #21262d; 
         }
 
         .card h3 { 
-            font-size: 15px; 
-            margin: 12px 0 4px; 
+            font-size: 13px; 
+            margin: 8px 0 3px; 
             color: #f0f6fc; 
             white-space: nowrap;
             overflow: hidden;
@@ -87,9 +113,9 @@
         }
 
         .card p { 
-            font-size: 11px; 
+            font-size: 10px; 
             color: #8b949e; 
-            margin: 0 0 12px; 
+            margin: 0 0 8px; 
             font-family: monospace; 
         }
 
@@ -97,58 +123,59 @@
             background: #1f6feb; 
             color: white; 
             border: none; 
-            padding: 10px; 
-            border-radius: 6px; 
+            padding: 7px; 
+            border-radius: 5px; 
             cursor: pointer; 
             width: 100%; 
             font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 11px;
+            margin-bottom: 8px;
         }
         .btn-main:hover { background: #388bfd; }
 
         .addons-section {
             border-top: 1px solid #30363d;
-            padding-top: 10px;
-            margin-top: 5px;
+            padding-top: 8px;
+            margin-top: 2px;
             text-align: left;
         }
         .addons-title {
-            font-size: 12px;
+            font-size: 10px;
             color: #8b949e;
             font-weight: bold;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
+            margin-bottom: 5px;
         }
         .addon-item {
             background: #0d1117;
             border: 1px solid #21262d;
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            padding: 5px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
+            font-size: 10px;
         }
         .addon-item span {
             color: #e6edf3;
-            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90px;
         }
         .btn-sub {
             background: #238636;
             color: white;
             border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 4px 6px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: bold;
         }
         .btn-sub:hover { background: #2ea043; }
         .empty-addons {
-            font-size: 11px;
+            font-size: 9px;
             color: #484f58;
             font-style: italic;
         }
@@ -161,12 +188,13 @@
         <div class="status-badge">GoldHEN Ready</div>
     </div>
     
-    <div class="grid" id="game-list">
-        <p style="text-align: center; grid-column: 1 / -1; color: #8b949e;">Cargando biblioteca...</p>
+    <!-- Fila Horizontal -->
+    <div class="horizontal-scroll" id="game-list">
+        <p style="color: #8b949e;">Cargando biblioteca...</p>
     </div>
 
     <script>
-        fetch('games.json?v=' + new Date().getTime()) // Evita la caché vieja
+        fetch('games.json?v=' + new Date().getTime())
             .then(res => {
                 if (!res.ok) throw new Error('No se encontró el archivo games.json');
                 return res.json();
@@ -177,28 +205,26 @@
 
                 games.forEach((game, index) => {
                     const cusa = (game.cusa || "CUSA00000").toUpperCase();
-                    
-                    // Si pones imagen manual la usa; si no, intenta buscar la de PSN por CUSA
                     const coverUrl = game.image || `https://gs-sec.ww.prod.dl.playstation.net/gs/sec/app/pkg/CH0001-${cusa}_00-0000000000000000/i/icon0.png`;
                     const gameTitle = game.title || `Juego (${cusa})`;
 
-                    // Renderizar actualizaciones
-                    let updatesHtml = '<div class="empty-addons">Sin actualizaciones</div>';
+                    // Updates
+                    let updatesHtml = '<div class="empty-addons">Sin updates</div>';
                     if (game.updates && game.updates.length > 0) {
                         updatesHtml = game.updates.map(up => `
                             <div class="addon-item">
-                                <span>${up.name}</span>
+                                <span title="${up.name}">${up.name}</span>
                                 <button class="btn-sub" onclick="installGame('${up.url}')">Instalar</button>
                             </div>
                         `).join('');
                     }
 
-                    // Renderizar DLCs
-                    let dlcsHtml = '<div class="empty-addons">Sin DLCs disponibles</div>';
+                    // DLCs
+                    let dlcsHtml = '<div class="empty-addons">Sin DLCs</div>';
                     if (game.dlcs && game.dlcs.length > 0) {
                         dlcsHtml = game.dlcs.map(dlc => `
                             <div class="addon-item">
-                                <span>${dlc.name}</span>
+                                <span title="${dlc.name}">${dlc.name}</span>
                                 <button class="btn-sub" onclick="installGame('${dlc.url}')">Instalar</button>
                             </div>
                         `).join('');
@@ -209,16 +235,16 @@
                     card.tabIndex = index + 1;
                     card.innerHTML = `
                         <div>
-                            <img src="${coverUrl}" alt="${cusa}" onerror="this.src='https://via.placeholder.com/240x280?text=${cusa}'">
+                            <img src="${coverUrl}" alt="${cusa}" onerror="this.src='https://via.placeholder.com/160x180?text=${cusa}'">
                             <h3>${gameTitle}</h3>
                             <p>${cusa}</p>
-                            <button class="btn-main" onclick="installGame('${game.url}')">Instalar Juego Base</button>
+                            <button class="btn-main" onclick="installGame('${game.url}')">Juego Base</button>
                         </div>
                         
                         <div class="addons-section">
-                            <div class="addons-title">🔄 Actualizaciones</div>
+                            <div class="addons-title">🔄 Updates</div>
                             ${updatesHtml}
-                            <div class="addons-title" style="margin-top: 10px;">🧩 DLCs / Contenido</div>
+                            <div class="addons-title" style="margin-top: 6px;">🧩 DLCs</div>
                             ${dlcsHtml}
                         </div>
                     `;
@@ -227,7 +253,7 @@
             })
             .catch(err => {
                 console.error(err);
-                document.getElementById('game-list').innerHTML = `<p style="color: red; text-align: center;">Error al cargar catálogo.</p>`;
+                document.getElementById('game-list').innerHTML = `<p style="color: red;">Error al cargar catálogo.</p>`;
             });
 
         function installGame(pkgUrl) {
@@ -241,11 +267,11 @@
                 body: JSON.stringify(data)
             })
             .then(() => {
-                alert('¡Petición enviada a GoldHEN! Revisa tus notificaciones de descarga en la consola.');
+                alert('¡Petición enviada a GoldHEN!');
             })
             .catch(err => {
                 console.error(err);
-                alert('No se pudo enviar la orden a la consola.');
+                alert('No se pudo enviar la orden.');
             });
         }
     </script>
