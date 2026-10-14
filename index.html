@@ -3,66 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Tienda PS4</title>
+    <title>PS4 Aurora Dashboard</title>
     <style>
         body { 
-            font-family: Arial, sans-serif; 
-            background: #0d1117; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #090c10; 
             color: #fff; 
-            padding: 30px; 
+            padding: 40px; 
             margin: 0; 
+            overflow-x: hidden;
         }
-        h1 { text-align: center; color: #1f6feb; margin-bottom: 30px; }
+        
+        /* Barra de título estilo consola */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto 30px auto;
+            border-bottom: 2px solid #21262d;
+            padding-bottom: 15px;
+        }
+        .dashboard-header h1 { 
+            margin: 0; 
+            color: #58a6ff; 
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .status-badge {
+            background: #238636;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(35, 134, 54, 0.4);
+        }
+
+        /* Contenedor estilo Grid Aurora */
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 20px; 
-            max-width: 1200px; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 25px; 
+            max-width: 1300px; 
             margin: 0 auto; 
         }
+
+        /* Tarjeta de juego individual */
         .card { 
             background: #161b22; 
-            border: 1px solid #30363d;
-            border-radius: 8px; 
+            border: 2px solid #30363d;
+            border-radius: 12px; 
             overflow: hidden; 
-            padding: 15px; 
+            padding: 12px; 
             text-align: center; 
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            outline: none;
         }
+
+        /* Efecto Aurora al enfocar con el mando o ratón */
+        .card:focus, .card:hover { 
+            transform: scale(1.08) translateY(-5px); 
+            border-color: #58a6ff; 
+            box-shadow: 0 10px 30px rgba(88, 166, 255, 0.4);
+            background: #1c2128;
+            z-index: 10;
+        }
+
         .card img { 
             width: 100%; 
-            height: 260px; 
+            height: 270px; 
             object-fit: cover; 
-            border-radius: 4px; 
+            border-radius: 8px; 
             background: #21262d; 
         }
-        .card h3 { font-size: 15px; margin: 10px 0 5px; color: #58a6ff; word-break: break-word; }
-        .card p { font-size: 12px; color: #8b949e; margin: 0 0 12px; font-family: monospace; }
+
+        .card h3 { 
+            font-size: 14px; 
+            margin: 12px 0 4px; 
+            color: #f0f6fc; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card p { 
+            font-size: 11px; 
+            color: #8b949e; 
+            margin: 0 0 12px; 
+            font-family: monospace; 
+        }
+
+        /* Botón de instalación integrado en la tarjeta */
         button { 
-            background: #238636; 
+            background: #1f6feb; 
             color: white; 
             border: none; 
             padding: 10px; 
-            border-radius: 5px; 
+            border-radius: 6px; 
             cursor: pointer; 
             width: 100%; 
-            font-weight: bold; 
+            font-weight: bold;
+            font-size: 13px;
+            transition: background 0.2s;
         }
-        button:hover { background: #2ea043; }
-        .error-box { color: #f85149; text-align: center; grid-column: 1 / -1; background: #21262d; padding: 20px; border-radius: 6px; }
+        .card:focus button, button:hover { 
+            background: #388bfd; 
+        }
+
+        .error-box { 
+            color: #f85149; 
+            text-align: center; 
+            grid-column: 1 / -1; 
+            background: #161b22; 
+            padding: 30px; 
+            border-radius: 8px; 
+            border: 1px solid #30363d;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Mi Tienda Cloud PS4</h1>
+    <div class="dashboard-header">
+        <h1>🎮 PS4 Cloud Dashboard</h1>
+        <div class="status-badge">GoldHEN Ready</div>
+    </div>
     
     <div class="grid" id="game-list">
-        <p style="text-align: center; grid-column: 1 / -1;">Cargando catálogo...</p>
+        <p style="text-align: center; grid-column: 1 / -1; color: #8b949e;">Cargando biblioteca...</p>
     </div>
 
     <script>
         fetch('games.json')
             .then(res => {
-                if (!res.ok) throw new Error('No se encontró el archivo games.json (Código: ' + res.status + ')');
+                if (!res.ok) throw new Error('No se encontró el archivo games.json');
                 return res.json();
             })
             .then(games => {
@@ -70,22 +146,23 @@
                 container.innerHTML = '';
                 
                 if (games.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No hay juegos en el catálogo.</p>';
+                    container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">No hay juegos en la biblioteca.</p>';
                     return;
                 }
 
-                games.forEach(game => {
+                games.forEach((game, index) => {
                     const cusa = (game.cusa || "CUSA00000").toUpperCase();
                     const coverUrl = `https://gs-sec.ww.prod.dl.playstation.net/gs/sec/app/pkg/CH0001-${cusa}_00-0000000000000000/i/icon0.png`;
                     const gameTitle = game.title || `Juego (${cusa})`;
 
                     const card = document.createElement('div');
                     card.className = 'card';
+                    card.tabIndex = index + 1; // Permite saltar de tarjeta en tarjeta con el mando de la PS4
                     card.innerHTML = `
-                        <img src="${coverUrl}" alt="${cusa}" onerror="this.src='https://via.placeholder.com/220x260?text=${cusa}'">
+                        <img src="${coverUrl}" alt="${cusa}" onerror="this.src='https://via.placeholder.com/200x270?text=${cusa}'">
                         <h3>${gameTitle}</h3>
                         <p>${cusa}</p>
-                        <button onclick="installGame('${game.url}')">Instalar Juego</button>
+                        <button onclick="installGame('${game.url}')">Instalar</button>
                     `;
                     container.appendChild(card);
                 });
@@ -94,9 +171,8 @@
                 console.error(err);
                 document.getElementById('game-list').innerHTML = `
                     <div class="error-box">
-                        <h3>⚠️ Error al cargar el catálogo</h3>
+                        <h3>⚠️ Error al conectar con la biblioteca</h3>
                         <p>${err.message}</p>
-                        <p style="font-size: 11px; color: #8b949e; margin-top: 10px;">Revisa que el archivo <b>games.json</b> esté bien escrito y en la raíz del repositorio.</p>
                     </div>`;
             });
 
