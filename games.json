@@ -1,16 +1,7 @@
 [
   {
-    "title": "Nombre de tu Primer Juego",
-    "title_id": "CUSA00001",
-    "size": "4.5 GB",
-    "image": "https://images.igdb.com/igdb/image/upload/t_cover_big/a.jpg",
-    "url": "https://drive.google.com/uc?export=download&id=1JrpAlhnDjf6zuB8xM11t9dcqpfXjkEf5"
-  },
-  {
-    "title": "Nombre de tu Segundo Juego",
-    "title_id": "CUSA00002",
-    "size": "12.0 GB",
-    "image": "https://images.igdb.com/igdb/image/upload/t_cover_big/b.jpg",
-    "url": "https://enlace-de-tu-segundo-juego.com/archivo.pkg"
+    "cusa": "CUSA00123",
+    "title": "Nombre del Juego",
+    "url": "ENLACE_DE_DESCARGA_DIRECTA"
   }
 ]
