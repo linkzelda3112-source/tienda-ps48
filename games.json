@@ -10,7 +10,12 @@
     "cusa": "CUSA00265",
     "title": "Minecraft: PlayStation 4 Edition",
     "url": "https://archive.org/download/super-psx-minecraft.-play-station-4.-edition-cusa-00265-v-1.00-1.70-opoisso-893/%5BSuperPSX%5D-Minecraft.PlayStation4.Edition_CUSA00265_v1.00_%5B1.70%5D_OPOISSO893.pkg",
-    "updates": [],
+    "updates": [
+      {
+        "name": "Update v3.43 (Backport)",
+        "url": "https://archive.org/download/super-psx-minecraft-cusa-00265-v-3.43-backport-505-672-7xx-900-1100-1200-opoisso-893/%5BSuperPSX%5D-Minecraft_CUSA00265_v3.43_BACKPORT_%5B505-672-7xx-900-1100-1200%5D_OPOISSO893.pkg"
+      }
+    ],
     "dlcs": []
   }
 ]
