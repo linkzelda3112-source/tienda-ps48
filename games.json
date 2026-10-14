@@ -18,5 +18,17 @@
       }
     ],
     "dlcs": []
+  },
+  {
+    "cusa": "CUSA00740",
+    "title": "Terraria",
+    "url": "https://archive.org/download/super-psx-terraria-cusa-00740-v-1.00-1.75-ps-4/%5BSuperPSX%5D-Terraria_CUSA00740_v1.00_%5B1.75%5D-PS4.pkg",
+    "updates": [
+      {
+        "name": "Update v1.35 (9.00+)",
+        "url": "https://archive.org/download/super-psx-terraria-cusa-00740-v-1.35-9.00-ps-4/%5BSuperPSX%5D-Terraria_CUSA00740_v1.35_%5B9.00%2B%5D-PS4.pkg"
+      }
+    ],
+    "dlcs": []
   }
 ]
