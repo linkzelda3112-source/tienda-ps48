@@ -3,75 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 Remote Store</title>
+    <title>PS4 Celular Remote Store</title>
     <style>
         * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #090c10; 
-            color: #fff; 
-            padding: 20px; 
-            margin: 0; 
-            overflow-x: hidden;
-        }
-        
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 100%;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #21262d;
-            padding-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .dashboard-header h1 { 
-            margin: 0; 
-            color: #58a6ff; 
-            font-size: 20px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+        body { font-family: sans-serif; background: #090c10; color: #fff; padding: 15px; margin: 0; }
+        h1 { color: #58a6ff; font-size: 18px; }
+        .card { background: #161b22; border: 1px solid #30363d; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .card h3 { font-size: 14px; margin: 0 0 5px; }
+        button { background: #1f6feb; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #388bfd; }
+    </style>
+</head>
+<body>
 
-        .search-container input {
-            background: #161b22;
-            border: 1px solid #30363d;
-            color: #fff;
-            padding: 7px 14px;
-            border-radius: 6px;
-            width: 220px;
-            font-size: 13px;
-            outline: none;
-        }
-        .search-container input:focus { border-color: #58a6ff; }
+    <h1>🎮 Control Remoto PS4</h1>
+    <p style="font-size: 12px; color: #8b949e;">PS4 Target: 192.168.100.128</p>
 
-        .status-badge {
-            background: #238636;
-            color: #fff;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-            box-shadow: 0 0 8px rgba(35, 134, 54, 0.4);
-        }
+    <div id="game-list">
+        <p>Cargando juegos...</p>
+    </div>
 
-        .horizontal-scroll { 
-            display: flex; 
-            flex-direction: row;
-            gap: 15px; 
-            overflow-x: auto; 
-            overflow-y: hidden;
-            padding: 15px 5px 25px 5px;
-            scroll-behavior: smooth;
-        }
-        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
-        .horizontal-scroll::-webkit-scrollbar-track { background: #161b22; border-radius: 4px; }
-        .horizontal-scroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+    <script>
+        // Catálogo directo de ejemplo con tu Tenkaichi 4 y Minecraft
+        const games = [
+            {
+                title: "Dragon Ball Z: Tenkaichi 4",
+                cusa: "CUSA00000",
+                url: "https://archive.org/download/tenkaichi-4-ps-4/Tenkaichi%204%20ps4.pkg"
+            },
+            {
+                title: "Minecraft: PlayStation 4 Edition",
+                cusa: "CUSA00265",
+                url: "https://archive.org/download/super-psx-minecraft.-play-station-4.-edition-cusa-00265-v-1.00-1.70-opoisso-893/%5BSuperPSX%5D-Minecraft.PlayStation4.Edition_CUSA00265_v1.00_%5B1.70%5D_OPOISSO893.pkg"
+            }
+        ];
 
-        .card { 
-            flex: 0 0 160px; 
-            width: 160px;
-            background: #161b22; 
-            border:
-        
+        const container = document.getElementById('game-list');
+        container.innerHTML = '';
+
+        games.forEach(game => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <h3>${game.title}</h3>
+                <p style="font-size: 10px; color: #8b949e;">${game.cusa}</p>
+                <button onclick="sendToPS4('${game.url}')">Instalar en la PS4</button>
+            `;
+            container.appendChild(div);
+        });
+
+        // FUNCIÓN CLAVE: Manda la orden directo a la IP de tu PS4 en la red local
+        function sendToPS4(pkgUrl) {
+            const ps4Ip = '192.168.100.128'; // <--- Tu IP exacta de la PS4
+            const endpoint = `http://${ps4Ip}:12800/api/install`;
+            const payload = {
+                type: "direct",
+                packages: [pkgUrl]
+            };
+
+            fetch(endpoint, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                alert('¡Orden enviada a la PS4! Revisa tu televisión.');
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Error al conectar con la PS4. Revisa que estén en el mismo Wi-Fi.');
+            });
+        }
+    </script>
+</body>
+</html>
