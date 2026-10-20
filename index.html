@@ -21,6 +21,8 @@
             border-bottom: 2px solid #21262d;
             padding-bottom: 10px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         h1 { margin: 0; color: #58a6ff; font-size: 18px; text-transform: uppercase; }
 
@@ -34,13 +36,18 @@
             font-size: 12px;
             outline: none;
         }
+        .search-box:focus { border-color: #58a6ff; }
 
         .horizontal-scroll { 
             display: flex; 
             gap: 15px; 
             overflow-x: auto; 
             padding-bottom: 15px;
+            scroll-behavior: smooth;
         }
+        .horizontal-scroll::-webkit-scrollbar { height: 8px; }
+        .horizontal-scroll::-webkit-scrollbar-track { background: #161b22; border-radius: 4px; }
+        .horizontal-scroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
 
         .card { 
             flex: 0 0 150px; 
@@ -49,7 +56,10 @@
             border: 2px solid #30363d;
             border-radius: 8px; 
             padding: 8px; 
-            text-align: center; 
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card img { 
             width: 100%; 
@@ -86,4 +96,42 @@
 
     <div class="header">
         <h1>🎮 Mi Tienda Payloader</h1>
-        <input type="text" id="search-box" class="search-box" placeholder="🔍 Buscar juego..." oninput="filterGames
+        <input type="text" id="search-box" class="search-box" placeholder="🔍 Buscar juego..." oninput="filterGames()">
+    </div>
+    
+    <div class="horizontal-scroll" id="game-list">
+        <p style="color: #8b949e;">Cargando catálogo...</p>
+    </div>
+
+    <script>
+        let allGames = [];
+        // Ruta relativa limpia para que lea el games.json del mismo repositorio
+        const cloudCatalogUrl = 'games.json';
+
+        fetch(cloudCatalogUrl + '?v=' + new Date().getTime())
+            .then(res => {
+                if (!res.ok) throw new Error('No se encontró games.json');
+                return res.json();
+            })
+            .then(games => {
+                allGames = games;
+                renderGames(allGames);
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('game-list').innerHTML = `<p style="color: red; padding: 10px;">Error al cargar el catálogo. Revisa que games.json esté en la raíz.</p>`;
+            });
+
+        function renderGames(gamesArray) {
+            const container = document.getElementById('game-list');
+            container.innerHTML = '';
+
+            if (gamesArray.length === 0) {
+                container.innerHTML = `<p style="color: #8b949e; padding: 10px;">No se encontraron juegos.</p>`;
+                return;
+            }
+
+            gamesArray.forEach((game) => {
+                const cusa = (game.cusa || "CUSA00000").toUpperCase();
+                const coverUrl = game.image || `
+        
